@@ -33,7 +33,7 @@ func main() {
 		log.Panic("error on the api server", err)
 	}
 
-	err = apiServer.Run(cfg.HTTPPort) // this method will block the calling goroutine indefinitely unless an error happens
+	err = apiServer.Run(cfg.HTTPPort)
 	if err != nil {
 		panic(err)
 	}

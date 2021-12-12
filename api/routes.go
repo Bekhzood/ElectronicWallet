@@ -6,5 +6,9 @@ import (
 )
 
 func endpointsV1(r *gin.RouterGroup, h *v1.Handler) {
-	r.GET("/account", h.GetAccount)
+	authRoutes := r.Group("/").Use(h.DigestAuth())
+	authRoutes.POST("/account/:id", h.CheckAccount)
+	authRoutes.POST("/account/:id/history", h.GetTransactionsHistory)
+	authRoutes.POST("/account/:id/balance", h.GetBalance)
+	authRoutes.POST("/account/:id/balance/update", h.UpdateBalance)
 }

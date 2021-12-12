@@ -15,6 +15,9 @@ type Config struct {
 	PostgresDatabase string
 	PostgresUser     string
 	PostgresPassword string
+	Realm            string
+	Nonce            string
+	Method           string
 }
 
 func Load() Config {
@@ -30,6 +33,9 @@ func Load() Config {
 	config.PostgresDatabase = cast.ToString(getOrReturnDefaultValue("POSTGRES_DATABASE", "postgres"))
 	config.PostgresUser = cast.ToString(getOrReturnDefaultValue("POSTGRES_USER", "postgres"))
 	config.PostgresPassword = cast.ToString(getOrReturnDefaultValue("POSTGRES_PASSWORD", "123"))
+	config.Realm = cast.ToString(getOrReturnDefaultValue("REALM", "some@example.com"))
+	config.Nonce = cast.ToString(getOrReturnDefaultValue("NONCE", "uniqueString"))
+	config.Method = cast.ToString(getOrReturnDefaultValue("METHOD", "POST"))
 
 	return config
 }
