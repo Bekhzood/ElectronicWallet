@@ -22,14 +22,20 @@ type Wallet struct {
 }
 
 type Transaction struct {
-	ID               int       `json:"id"`
-	Sum              int       `json:"sum"`
-	SenderWalletId   string    `json:"sender_wallet_id"`
-	ReceiverWalletId string    `json:"receiver_wallet_id"`
-	CreatedAt        time.Time `json:"created_at"`
+	ID                   string    `json:"id"`
+	Sum                  int       `json:"sum"`
+	SenderWalletNumber   int       `json:"sender_wallet_number"`
+	ReceiverWalletNumber int       `json:"receiver_wallet_number"`
+	CreatedAt            time.Time `json:"created_at"`
 }
 
 type WalletTransactionsHistory struct {
 	Count        int           `json:"count"`
 	Transactions []Transaction `json:"transactions"`
+}
+
+type UpdateBalance struct {
+	ID                   string `json:"id"`
+	Sum                  int    `json:"sum"`
+	ReceiverWalletNumber int    `json:"receiver_wallet_number"`
 }

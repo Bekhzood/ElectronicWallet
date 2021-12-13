@@ -1,15 +1,17 @@
 package v1
 
 import (
+	"strconv"
+
 	"github.com/Bekhzood/ElectronicWallet/models"
 	"github.com/Bekhzood/ElectronicWallet/storage"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) CheckAccount(c *gin.Context) {
-	id := c.Param("id")
+	number := c.Param("number")
 
-	res, err := storage.NewAccountRepo(h.storagePostgres).CheckAccount(id)
+	res, err := storage.NewAccountRepo(h.storagePostgres).CheckAccount(number)
 	if err != nil {
 		h.handleErrorResponse(c, 400, "bad request", err.Error())
 		return
@@ -20,13 +22,22 @@ func (h *Handler) CheckAccount(c *gin.Context) {
 }
 
 func (h *Handler) GetTransactionsHistory(c *gin.Context) {
-	storage.NewAccountRepo(h.storagePostgres).GetHistory()
+	number := c.Param("number")
+	res, err := storage.NewAccountRepo(h.storagePostgres).GetHistory(number)
+
+	if err != nil {
+		h.handleErrorResponse(c, 400, "bad request", err.Error())
+		return
+	}
+
+	h.handleSuccessResponse(c, 200, "ok", res)
+	return
 }
 
 func (h *Handler) GetBalance(c *gin.Context) {
-	id := c.Param("id")
+	number := c.Param("number")
 
-	res, err := storage.NewAccountRepo(h.storagePostgres).GetBalance(id)
+	res, err := storage.NewAccountRepo(h.storagePostgres).GetBalance(number)
 
 	if err != nil {
 		h.handleErrorResponse(c, 400, "bad request", err.Error())
@@ -38,14 +49,19 @@ func (h *Handler) GetBalance(c *gin.Context) {
 }
 
 func (h *Handler) UpdateBalance(c *gin.Context) {
-	number := c.Param("id")
-	wallet := models.Wallet{}
+	var updateInfo models.UpdateBalance
 
-	if err := c.ShouldBindJSON(&wallet); err != nil {
+	number := c.Param("number")
+	numberConverted, err := strconv.Atoi(number)
+	if err != nil {
 		h.handleErrorResponse(c, 400, "bad request", err.Error())
 	}
 
-	res, err := storage.NewAccountRepo(h.storagePostgres).UpdateBalance(number, wallet.Balance)
+	if err := c.ShouldBindJSON(&updateInfo); err != nil {
+		h.handleErrorResponse(c, 400, "bad request", err.Error())
+	}
+
+	res, err := storage.NewAccountRepo(h.storagePostgres).UpdateBalance(numberConverted, updateInfo)
 
 	if err != nil {
 		h.handleErrorResponse(c, 400, "bad request", err.Error())
